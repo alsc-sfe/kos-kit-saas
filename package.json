@@ -1,0 +1,30 @@
+{
+  "name": "@ali/def-kit-saas",
+  "version": "1.0.0",
+  "description": "The DEF kit",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "yongbao.fyb",
+  "license": "ISC",
+  "publishConfig": {
+    "registry": "http://registry.npm.alibaba-inc.com"
+  },
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "webpack": "^3.8.1",
+    "webpack-dev-middleware": "^1.12.2",
+    "webpack-dev-server": "^2.9.5",
+    "webpack-hot-middleware": "^2.21.0",
+    "yeoman-generator": "^2.0.1",
+    "yosay": "^2.0.1"
+  },
+  "devDependencies": {
+    "@ali/def-core": "*",
+    "power-assert": "^1.4.2"
+  },
+  "readmeFilename": "README.md"
+}
