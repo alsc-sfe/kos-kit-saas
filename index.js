@@ -1,5 +1,7 @@
 "use strict";
 
+const chalk = require('chalk');
+
 module.exports = function(def) {
 
   const Kit = {};
@@ -60,7 +62,7 @@ module.exports = function(def) {
 
   // def dev [--options]
   Kit.dev = {
-    'description': '对命令描述',
+    'description': '',
     'options': {
       'sim': {
         "alias": 's',
@@ -82,6 +84,7 @@ module.exports = function(def) {
         builderReflect: '@ali/builder-saas/reflect.js',
         port: 9000,
         ip: '127.0.0.1',
+        host: 'local.alipay.net',
         customLivereLoad: true,
         livereload: false,
       };
@@ -93,21 +96,19 @@ module.exports = function(def) {
 
   // def build [--options]
   // 除非有非常特殊的自定义逻辑，一般不建议自己实现，底层 core 已有统一实现
-  /*
-   Kit.build = {
-     'description': '对命令描述',
-     'options': {
-
-     },
-     'action': function* (opts) {
-
-     }
-   };
-  */
+  Kit.build = {
+    'description': '对命令描述',
+    'action': function* (opts) {
+      yield def.kit.build.run({
+        'builder': '@ali/builder-saas',
+        // 'argv': ['--a', '1', '--b', '2']
+      });
+    }
+  };
 
   // def test [type] [--options]
   Kit.test = {
-    'description': '对命令描述',
+    'description': '',
     'options': {
 
     },
