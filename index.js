@@ -63,12 +63,12 @@ module.exports = function(def) {
   // def dev [--options]
   Kit.dev = {
     'description': '',
-    'options': {
-      'sim': {
-        "alias": 's',
-        'description': '开启模拟器调试'
-      }
-    },
+    // 'options': {
+    //   'sim': {
+    //     "alias": 's',
+    //     'description': '开启模拟器调试'
+    //   }
+    // },
     'action': function* (opts) {
       /*
        * opts:
@@ -79,9 +79,11 @@ module.exports = function(def) {
        *   - tmpDir: 服务器临时目录
        * 其他调用 def.kit.reflect.start 时传递的参数都会合并到 opts 对象中
        */
+      const abc = def.lookupABCJson();
+      const builder = abc.assets.builder.name;
 
       let refletParams = {
-        builderReflect: '@ali/builder-saas/reflect.js',
+        builderReflect: `${builder}/reflect.js`,
         port: 9000,
         ip: '127.0.0.1',
         host: 'local.alipay.net',
@@ -91,6 +93,7 @@ module.exports = function(def) {
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
+      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}`));
     }
   };
 
@@ -99,9 +102,11 @@ module.exports = function(def) {
   Kit.build = {
     'description': '对命令描述',
     'action': function* (opts) {
+      const abc = def.lookupABCJson();
+      const { builder } = abc;
+
       yield def.kit.build.run({
-        'builder': '@ali/builder-saas',
-        // 'argv': ['--a', '1', '--b', '2']
+        'builder': builder,
       });
     }
   };
