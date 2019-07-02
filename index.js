@@ -1,6 +1,8 @@
 "use strict";
 
 const chalk = require('chalk');
+const opn = require('opn');
+const portfinder = require('portfinder');
 
 module.exports = function(def) {
 
@@ -84,7 +86,7 @@ module.exports = function(def) {
 
       let refletParams = {
         builderReflect: `${builder}/reflect.js`,
-        port: 9000,
+        port: yield portfinder.getPortPromise(),
         ip: '127.0.0.1',
         host: 'local.alipay.net',
         customLivereLoad: true,
@@ -93,6 +95,7 @@ module.exports = function(def) {
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
+      opn(`http://local.alipay.net:${refletParams.port}/index.html?#/index`);
       def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}`));
     }
   };
