@@ -1,7 +1,7 @@
 "use strict";
 
 const chalk = require('chalk');
-const opn = require('opn');
+const open = require('open');
 const portfinder = require('portfinder');
 
 module.exports = function(def) {
@@ -95,7 +95,7 @@ module.exports = function(def) {
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      opn(`http://local.alipay.net:${refletParams.port}/index.html?#/index`);
+      open(`http://local.alipay.net:${refletParams.port}/index.html?#/index`);
       def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}`));
     }
   };

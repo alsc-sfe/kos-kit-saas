@@ -14,7 +14,7 @@
     "registry": "http://registry.npm.alibaba-inc.com"
   },
   "dependencies": {
-    "opn": "6",
+    "open": "^6.4.0",
     "portfinder": "1",
     "yeoman-generator": "2",
     "yosay": "2"
