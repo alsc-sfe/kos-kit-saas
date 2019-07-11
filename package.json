@@ -14,11 +14,15 @@
     "registry": "http://registry.npm.alibaba-inc.com"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@ali/def-pub-client": "^2.2.0",
     "co": "^4.6.0",
     "lodash": "^4.17.13",
     "node-fetch": "^2.6.0",
     "opn": "6",
+=======
+    "open": "^6.4.0",
+>>>>>>> 8bb45b91477d14fe81572a0c6c8a4bf4ef20b2d1
     "portfinder": "1",
     "querystring": "^0.2.0",
     "yeoman-generator": "2",
