@@ -2,7 +2,49 @@
 
 const chalk = require('chalk');
 const opn = require('opn');
+const get = require('lodash/get');
 const portfinder = require('portfinder');
+const co = require('co');
+const ROOT_PATH = process.cwd();
+const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.js'));
+const PKG = require(path.join(ROOT_PATH, 'package.json'));
+const { getRouter, fetchCheckChildApp } = require('./micro/fetch');
+
+const publish = require('./micro/publish');
+
+const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤销, 请谨慎操作！！！', [{
+  'name': '再检查检查',
+  'value': false,
+},
+{
+  'name': '确定线上发布',
+  'value': true,
+}], false);
+
+const checkSassConfig = function* () {
+  const microStatus = get(SAAS_CONFIG, 'microConfig.status', false);
+  if (microStatus) {
+    const appKey = get(SAAS_CONFIG, 'microConfig.appKey', false);
+    const name = get(PKG, 'name', '');
+    if (!appKey) throw '请在sass.config.js中设置appKey';
+    yield checkChildApp({ appKey, name });
+    yield checkRouter(appKey);
+  }
+}
+
+const checkChildApp = function* (param) {
+  const res = yield fetchCheckChildApp(param);
+  if (!res.data) throw '请检查saas.config.js中的appKey, package.json中的name是否和微信管理平台一致';
+}
+
+const checkRouter = function* (appKey) {
+  let saasRouters = [];
+  const pages = get(SAAS_CONFIG, 'page', {});
+  const res = yield getRouter({ appKey });
+  const microRouters = res.data.map(item => item.app_child_router_name);
+  Object.keys(pages).forEach(item => saasRouters.push(pages[item].route));
+  if (saasRouters.sort().toString() !== microRouters.sort().toString()) throw 'sass.config.js中配置的router与微应用平台不一致';
+}
 
 module.exports = function(def) {
 
@@ -12,15 +54,12 @@ module.exports = function(def) {
   Kit.hooks = {
     'before': function* (cmd, args, opts) {
       // 在正式执行命令前的前置操作
-
       // throw new Error('msg'); // 抛出异常，将不再执行相关命令，包括 after hook 也不会执行
-
       // return false; // 返回 false，将不再执行相关命令，继续执行 after hook
-
       // return true; // 返回 true，继续执行相关命令，包括 after hook
     },
     'after': function* (cmd, args, opts) {
-      // 可以执行一些命令清理工作
+      // if (microStatus && cmd === 'publish' && (opts.daily || opts.prod)) {}
     }
   };
 
@@ -127,15 +166,40 @@ module.exports = function(def) {
 
   // def publish
   // 除非有非常特殊的自定义逻辑，一般不建议自己实现，底层 core 已有统一实现
-  /*
-   Kit.publish = {
-     'description': '对命令描述',
-     '__force__': true, // 强制自定义 publish 命令
-     'action': function* (opts) {
-
-     }
-   };
-  */
+  Kit.publish = {
+    'description': '对命令描述',
+    '__force__': true, // 强制自定义 publish 命令
+    'options': {
+      'daily': { // 默认解析为 boolean
+        "alias": 'd',
+        'description': '日常发布'
+      },
+      'prod': {
+        'alias': 'o',
+        'description': '生成发布',
+      }
+    },
+    'action': function* (type, opts) {
+      if (!opts.daily && !opts.prod) {
+        throw new Error('使用def p -d进行日常发布。使用def p -o进行正式发布')
+      } else {
+        try {
+          process.env.cloudEnv = opts.prod ? 'daily' : 'prod';
+          yield checkSassConfig();
+          if (opts.prod) {
+            const yes = yield ask(def);
+            if (!yes) {
+              throw '终止发布';
+            }
+          }
+          yield co(publish.bind(this, opts));
+        } catch (err) {
+          console.log('err:');
+          console.error(err);
+        }
+      }
+    }
+  };
 
   return Kit;
 

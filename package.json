@@ -1,6 +1,6 @@
 {
   "name": "@ali/def-kit-saas",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The DEF saas for koubei",
   "main": "index.js",
   "scripts": {},
@@ -14,8 +14,13 @@
     "registry": "http://registry.npm.alibaba-inc.com"
   },
   "dependencies": {
+    "@ali/def-pub-client": "^2.2.0",
+    "co": "^4.6.0",
+    "lodash": "^4.17.13",
+    "node-fetch": "^2.6.0",
     "opn": "6",
     "portfinder": "1",
+    "querystring": "^0.2.0",
     "yeoman-generator": "2",
     "yosay": "2"
   },
