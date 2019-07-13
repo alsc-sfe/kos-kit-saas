@@ -1,11 +1,6 @@
 const defpub = require('@ali/def-pub-client');
-const get = require('lodash/get');
 const gitConfig = require('./git');
 const { pushAssets } = require('./fetch');
-const ROOT_PATH = process.cwd();
-const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.js'));
-const microStatus = get(SAAS_CONFIG, 'microConfig.status', false);
-const pages = get(SAAS_CONFIG, 'page', {});
 
 function* publish(opts) {
   // 第一步：获取用户身份信息
@@ -35,23 +30,21 @@ function* publish(opts) {
       // result.files [] 本次发布的 assets 资源列表，非 assets 发布类型该字段为空
       // result.build {url: 'tar.gz', md5: ''} 代码构建结果的压缩包地址和 md5
       // 微平台发布
-      if (microStatus) {
-        const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
-        if (!assetsFile) reject('微应用平台发布失败');
-        const appKey = get(SAAS_CONFIG, 'microConfig.appKey', false);
-        const param = {
-          appKey,
-          gitConfig,
-          assets: result.files,
-          assetsFile,
-          pages,
-        };
-        pushAssets(param).then(res => {
-          resolve('微平台数据写入成功');
-        });
-      } else {
-        resolve(result);
-      }
+      // console.log(result.build);
+      const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
+      if (!assetsFile) reject('微应用平台发布失败');
+      const param = {
+        gitConfig,
+        oss: result.build.url,
+        target: opts.prod ? 'prod' : 'daily',
+      };
+      pushAssets(param).then(res => {
+        console.log('微平台数据写入成功');
+        resolve('微平台数据写入成功');
+      }).catch((err) => {
+        console.log('微平台数据写入失败');
+        reject(err);
+      });
     });
     // run 方法中传入发布仓库信息
     const target = opts.prod ? 'prod' : 'daily';
@@ -72,7 +65,6 @@ function* publish(opts) {
       target,
       hideBuildMessage: true,
     };
-    // console.log(JSON.stringify(param, null, 2));
     client.run(param);
   });
 };
