@@ -4,6 +4,7 @@ const chalk = require('chalk');
 const get = require('lodash/get');
 const portfinder = require('portfinder');
 const co = require('co');
+const open = require('open');
 const ROOT_PATH = process.cwd();
 const PKG = require(path.join(ROOT_PATH, 'package.json'));
 const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.js'));
