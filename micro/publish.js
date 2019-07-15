@@ -31,8 +31,8 @@ function* publish(opts) {
       // result.build {url: 'tar.gz', md5: ''} 代码构建结果的压缩包地址和 md5
       // 微平台发布
       // console.log(result.build);
-      const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
-      if (!assetsFile) reject('微应用平台发布失败');
+      // const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
+      // if (!assetsFile) reject('微应用平台发布失败');
       const param = {
         gitConfig,
         oss: result.build.url,

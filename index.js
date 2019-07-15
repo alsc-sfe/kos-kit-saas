@@ -23,7 +23,9 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
-  const res = yield fetchCheckChildApp({ name });
+  const appRoute = get(SAAS_CONFIG, 'microConfig.appRoute', '');
+  if (!appRoute) throw '缺少appRoute, 请在微应用管理平台获取, 并在saas.config.js中配置';
+  const res = yield fetchCheckChildApp({ name, appRoute });
   if (!res.data) throw '微应用未被注册';
 }
 
