@@ -1,6 +1,6 @@
 {
   "name": "@ali/def-kit-saas",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "The DEF saas for koubei",
   "main": "index.js",
   "scripts": {},

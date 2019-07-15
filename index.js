@@ -7,7 +7,8 @@ const co = require('co');
 const open = require('open');
 const ROOT_PATH = process.cwd();
 const PKG = require(path.join(ROOT_PATH, 'package.json'));
-const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.js'));
+const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'));
+
 const { fetchCheckChildApp } = require('./micro/fetch');
 
 const publish = require('./micro/publish');
