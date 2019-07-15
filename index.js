@@ -5,12 +5,17 @@ const get = require('lodash/get');
 const portfinder = require('portfinder');
 const co = require('co');
 const open = require('open');
+const fs = require('fs');
 const ROOT_PATH = process.cwd();
-const PKG = require(path.join(ROOT_PATH, 'package.json'));
-const SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'));
+
+let PKG = {};
+let SAAS_CONFIG = {};
+try {
+  PKG = fs.readFileSync(path.join(ROOT_PATH, 'package.json')).toString();
+  SAAS_CONFIG = fs.readFileSync(path.join(ROOT_PATH, 'saas.config.ts')).toString();
+} catch (err) {}
 
 const { fetchCheckChildApp } = require('./micro/fetch');
-
 const publish = require('./micro/publish');
 
 const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤销, 请谨慎操作！！！', [{

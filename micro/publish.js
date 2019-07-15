@@ -1,6 +1,4 @@
 const defpub = require('@ali/def-pub-client');
-const gitConfig = require('./git');
-const { pushAssets } = require('./fetch');
 
 function* publish(opts) {
   // 第一步：获取用户身份信息
@@ -33,6 +31,8 @@ function* publish(opts) {
       // console.log(result.build);
       // const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
       // if (!assetsFile) reject('微应用平台发布失败');
+      const gitConfig = require('./git');
+      const { pushAssets } = require('./fetch');
       const param = {
         gitConfig,
         oss: result.build.url,
