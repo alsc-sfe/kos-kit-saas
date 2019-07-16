@@ -1,6 +1,8 @@
-const defpub = require('@ali/def-pub-client');
-
 function* publish(opts) {
+  const defpub = require('@ali/def-pub-client');
+  const { pushAssets } = require('./fetch');
+  const gitConfig = require('./git');
+
   // 第一步：获取用户身份信息
   const ticket = yield defpub.login();
 
@@ -31,13 +33,13 @@ function* publish(opts) {
       // console.log(result.build);
       // const assetsFile = result.files.find((item) => item.endsWith('/assets.json'));
       // if (!assetsFile) reject('微应用平台发布失败');
-      const gitConfig = require('./git');
-      const { pushAssets } = require('./fetch');
       const param = {
         gitConfig,
         oss: result.build.url,
         target: opts.prod ? 'prod' : 'daily',
       };
+      console.log('微平台数据写入中。。。');
+      console.log(JSON.stringify(param, null, 2));
       pushAssets(param).then(res => {
         console.log('微平台数据写入成功');
         resolve('微平台数据写入成功');
@@ -51,10 +53,6 @@ function* publish(opts) {
     
     if (!gitConfig.url) {
       reject('请在package.json中填写git url');
-      return;
-    }
-    if (!gitConfig.branch || gitConfig.branch === 'master') {
-      reject('git分支不允许发布');
       return;
     }
 

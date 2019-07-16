@@ -1,6 +1,5 @@
 const fetch = require('node-fetch');
 const querystring = require('querystring');
-
 const { DEF_SERVER } = require('./config');
 
 const ajaxWrapper = ({ method = 'GET', url, param }) => {

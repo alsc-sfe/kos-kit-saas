@@ -11,8 +11,12 @@ const ROOT_PATH = process.cwd();
 let PKG = {};
 let SAAS_CONFIG = {};
 try {
+  // def publish才需要使用package.json、saas.config.ts
+  // 直接使用require 文件路径不存在时， try catch无法捕获异常， process会中断，所以使用fs.readFileSync替代
   PKG = fs.readFileSync(path.join(ROOT_PATH, 'package.json')).toString();
   SAAS_CONFIG = fs.readFileSync(path.join(ROOT_PATH, 'saas.config.ts')).toString();
+  PKG = require(path.join(ROOT_PATH, 'package.json'));
+  SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'))
 } catch (err) {}
 
 const { fetchCheckChildApp } = require('./micro/fetch');
@@ -156,6 +160,7 @@ module.exports = function(def) {
   // def publish
   // 除非有非常特殊的自定义逻辑，一般不建议自己实现，底层 core 已有统一实现
   const microStatus = get(SAAS_CONFIG, 'microConfig.status', false);
+  console.log(`开启微应用管理：${microStatus}`);
   if (microStatus) {
     Kit.publish = {
       'description': '对命令描述',
