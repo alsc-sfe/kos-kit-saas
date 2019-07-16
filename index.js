@@ -16,7 +16,7 @@ try {
   PKG = fs.readFileSync(path.join(ROOT_PATH, 'package.json')).toString();
   SAAS_CONFIG = fs.readFileSync(path.join(ROOT_PATH, 'saas.config.ts')).toString();
   PKG = require(path.join(ROOT_PATH, 'package.json'));
-  SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'))
+  SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'));
 } catch (err) {}
 
 const { fetchCheckChildApp } = require('./micro/fetch');
