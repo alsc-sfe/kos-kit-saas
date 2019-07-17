@@ -33,9 +33,9 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
-  const appRoute = get(SAAS_CONFIG, 'microConfig.appRoute', '');
-  if (!appRoute) throw '缺少appRoute, 请在微应用管理平台获取, 并在saas.config.js中配置';
-  const res = yield fetchCheckChildApp({ name, appRoute });
+  const minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', '');
+  if (!minAppName) throw '缺少minAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
+  const res = yield fetchCheckChildApp({ name, appRoute: minAppName });
   if (!res.data) throw '微应用未被注册';
 }
 
@@ -125,12 +125,12 @@ module.exports = function(def) {
         livereload: false,
       };
 
-      const appRoute = get(SAAS_CONFIG, 'microConfig.appRoute', '');
+      const minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', 'local');
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${appRoute}/index`);
-      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}`));
+      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${minAppName}/index`);
+      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}/index.html?#/${minAppName}/index`));
     }
   };
 
