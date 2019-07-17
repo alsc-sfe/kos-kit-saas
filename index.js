@@ -125,7 +125,8 @@ module.exports = function(def) {
         livereload: false,
       };
 
-      const minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', 'local');
+      let minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', '');
+      minAppName = minAppName ? minAppName : 'local';
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
