@@ -125,9 +125,11 @@ module.exports = function(def) {
         livereload: false,
       };
 
+      const appRoute = get(SAAS_CONFIG, 'microConfig.appRoute', '');
+
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(`http://local.alipay.net:${refletParams.port}/index.html?#/index`);
+      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${appRoute}/index`);
       def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}`));
     }
   };
