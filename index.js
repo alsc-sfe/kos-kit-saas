@@ -33,9 +33,9 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
-  const minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', '');
-  if (!minAppName) throw '缺少minAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
-  const res = yield fetchCheckChildApp({ name, appRoute: minAppName });
+  const miniAppName = get(SAAS_CONFIG, 'miniAppName', '');
+  if (!miniAppName) throw '缺少miniAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
+  const res = yield fetchCheckChildApp({ name, appRoute: miniAppName });
   if (!res.data) throw '微应用未被注册';
 }
 
@@ -125,13 +125,13 @@ module.exports = function(def) {
         livereload: false,
       };
 
-      let minAppName = get(SAAS_CONFIG, 'microConfig.minAppName', '');
-      minAppName = minAppName ? minAppName : 'local';
+      let miniAppName = get(SAAS_CONFIG, 'miniAppName', '');
+      miniAppName = miniAppName ? miniAppName : 'common';
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${minAppName}/index`);
-      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}/index.html?#/${minAppName}/index`));
+      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${miniAppName}/index`);
+      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}/index.html?#/${miniAppName}/index`));
     }
   };
 
@@ -162,7 +162,7 @@ module.exports = function(def) {
 
   // def publish
   // 除非有非常特殊的自定义逻辑，一般不建议自己实现，底层 core 已有统一实现
-  const microStatus = get(SAAS_CONFIG, 'microConfig.status', false);
+  const microStatus = get(SAAS_CONFIG, 'appType', false) === 'microapp' ? true : false;
   console.log(`开启微应用管理：${microStatus}`);
   if (microStatus) {
     Kit.publish = {
