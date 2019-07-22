@@ -33,9 +33,9 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
-  const miniAppName = get(SAAS_CONFIG, 'miniAppName', '');
-  if (!miniAppName) throw '缺少miniAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
-  const res = yield fetchCheckChildApp({ name, appRoute: miniAppName });
+  const microAppName = get(SAAS_CONFIG, 'microAppName', '');
+  if (!microAppName) throw '缺少microAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
+  const res = yield fetchCheckChildApp({ name, appRoute: microAppName });
   if (!res.data) throw '微应用未被注册';
 }
 
@@ -122,18 +122,18 @@ module.exports = function(def) {
         builderReflect: `${builder}/reflect.js`,
         port,
         ip: '127.0.0.1',
-        host: 'local.alipay.net',
+        host: 'local.koubei.test',
         customLivereLoad: true,
         livereload: false,
       };
 
-      let miniAppName = get(SAAS_CONFIG, 'miniAppName', '');
-      miniAppName = miniAppName ? miniAppName : 'common';
+      let microAppName = get(SAAS_CONFIG, 'microAppName', '');
+      microAppName = microAppName ? microAppName : 'common';
 
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(`http://local.alipay.net:${refletParams.port}/index.html?#/${miniAppName}/index`);
-      def.log.info(chalk.yellow(`http://local.alipay.net:${refletParams.port}/index.html?#/${miniAppName}/index`));
+      open(`http://local.koubei.test:${refletParams.port}/index.html?#/${microAppName}/index`);
+      def.log.info(chalk.yellow(`http://local.koubei.test:${refletParams.port}/index.html?#/${microAppName}/index`));
     }
   };
 
