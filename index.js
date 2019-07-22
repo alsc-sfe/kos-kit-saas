@@ -115,10 +115,12 @@ module.exports = function(def) {
        */
       const abc = def.lookupABCJson();
       const builder = abc.assets.builder.name;
+      const autoPort = yield portfinder.getPortPromise();
+      const port = opts.port === 3333 ? autoPort : opts.port;
 
       let refletParams = {
         builderReflect: `${builder}/reflect.js`,
-        port: yield portfinder.getPortPromise(),
+        port,
         ip: '127.0.0.1',
         host: 'local.alipay.net',
         customLivereLoad: true,
