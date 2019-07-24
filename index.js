@@ -11,12 +11,12 @@ const ROOT_PATH = process.cwd();
 let PKG = {};
 let SAAS_CONFIG = {};
 try {
-  // def publish才需要使用package.json、saas.config.ts
+  // def publish才需要使用package.json、app.config.ts
   // 直接使用require 文件路径不存在时， try catch无法捕获异常， process会中断，所以使用fs.readFileSync替代
   PKG = fs.readFileSync(path.join(ROOT_PATH, 'package.json')).toString();
-  SAAS_CONFIG = fs.readFileSync(path.join(ROOT_PATH, 'saas.config.ts')).toString();
+  SAAS_CONFIG = fs.readFileSync(path.join(ROOT_PATH, 'app.config.ts')).toString();
   PKG = require(path.join(ROOT_PATH, 'package.json'));
-  SAAS_CONFIG = require(path.join(ROOT_PATH, 'saas.config.ts'));
+  SAAS_CONFIG = require(path.join(ROOT_PATH, 'app.config.ts'));
 } catch (err) {}
 
 const { fetchCheckChildApp } = require('./micro/fetch');
@@ -34,7 +34,7 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
   const microAppName = get(SAAS_CONFIG, 'microAppName', '');
-  if (!microAppName) throw '缺少microAppName, 请在微应用管理平台获取, 并在saas.config.js中配置';
+  if (!microAppName) throw '缺少microAppName, 请在微应用管理平台获取, 并在app.config.js中配置';
   const res = yield fetchCheckChildApp({ name, appRoute: microAppName });
   if (!res.data) throw '微应用未被注册';
 }
