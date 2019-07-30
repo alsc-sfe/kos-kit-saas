@@ -3,6 +3,7 @@
 const chalk = require('chalk');
 const get = require('lodash/get');
 const portfinder = require('portfinder');
+const querystring = require('querystring');
 const co = require('co');
 const open = require('open');
 const fs = require('fs');
@@ -43,19 +44,6 @@ module.exports = function(def) {
 
   const Kit = {};
 
-  // hooks.
-  Kit.hooks = {
-    'before': function* (cmd, args, opts) {
-      // 在正式执行命令前的前置操作
-      // throw new Error('msg'); // 抛出异常，将不再执行相关命令，包括 after hook 也不会执行
-      // return false; // 返回 false，将不再执行相关命令，继续执行 after hook
-      // return true; // 返回 true，继续执行相关命令，包括 after hook
-    },
-    'after': function* (cmd, args, opts) {
-      // if (microStatus && cmd === 'publish' && (opts.daily || opts.prod)) {}
-    }
-  };
-
   // def init cake [--options]
   Kit.init = {
     'action': function* (opts) {
@@ -83,26 +71,11 @@ module.exports = function(def) {
         'description': '对参数描述，不提供就默认'
       }
     },
-    'action': function* (type, names, opts) {
-      /*
-       * type: 类型（choices 中提供的 key）
-       *   = c
-       *   = p
-       * names: 名称（一个数组）
-       * opts: 选项 map
-       */
-    }
   };
 
   // def dev [--options]
   Kit.dev = {
     'description': '',
-    // 'options': {
-    //   'sim': {
-    //     "alias": 's',
-    //     'description': '开启模拟器调试'
-    //   }
-    // },
     'action': function* (opts) {
       /*
        * opts:
@@ -112,28 +85,33 @@ module.exports = function(def) {
        *   - host: 服务器 host 地址
        *   - tmpDir: 服务器临时目录
        * 其他调用 def.kit.reflect.start 时传递的参数都会合并到 opts 对象中
-       */
+      */
       const abc = def.lookupABCJson();
       const builder = abc.assets.builder.name;
       const autoPort = yield portfinder.getPortPromise();
+      // 默认使用3333端口
       const port = opts.port === 3333 ? autoPort : opts.port;
-
-      let refletParams = {
+      let devServer = get(SAAS_CONFIG, 'webpack.devServer', {});
+      let refletParams = Object.assign({
         builderReflect: `${builder}/reflect.js`,
-        port,
-        ip: '127.0.0.1',
         host: 'local.koubei.test',
-        customLivereLoad: true,
+        path: '',
+        query: {},
+        port,
         livereload: false,
-      };
-
-      let microAppName = get(SAAS_CONFIG, 'microAppName', '');
-      microAppName = microAppName ? microAppName : 'common';
-
+      }, devServer);
+      const query = querystring.stringify(refletParams.query);
+      let openUrl = `http://${refletParams.host}:${refletParams.port}/index.html`;
+      if (refletParams.path) {
+        openUrl += `#/${refletParams.path}`
+      }
+      if (query) {
+        openUrl += `?${query}`;
+      }
       yield def.kit.reflect.start(refletParams);
       def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(`http://local.koubei.test:${refletParams.port}/index.html?#/${microAppName}/index`);
-      def.log.info(chalk.yellow(`http://local.koubei.test:${refletParams.port}/index.html?#/${microAppName}/index`));
+      open(openUrl);
+      def.log.info(chalk.yellow(openUrl));
     }
   };
 

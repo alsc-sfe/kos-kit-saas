@@ -1,6 +1,6 @@
 {
   "name": "@ali/def-kit-saas",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "The DEF saas for koubei",
   "main": "index.js",
   "scripts": {},
@@ -18,8 +18,8 @@
     "co": "^4.6.0",
     "lodash": "^4.17.13",
     "node-fetch": "^2.6.0",
-    "opn": "6",
     "open": "^6.4.0",
+    "opn": "6",
     "portfinder": "1",
     "querystring": "^0.2.0",
     "yeoman-generator": "2",
