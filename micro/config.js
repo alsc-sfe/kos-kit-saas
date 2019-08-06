@@ -7,7 +7,7 @@ module.exports = {
 
 // module.exports = {
 //   DEF_SERVER: {
-//     daily: 'http://local.alipay.net:7001',
-//     prod: 'http://local.alipay.net:7001',
+//     daily: 'http://local.koubei.test:7001',
+//     prod: 'http://local.koubei.test:7001',
 //   },
 // }

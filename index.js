@@ -2,10 +2,7 @@
 
 const chalk = require('chalk');
 const get = require('lodash/get');
-const portfinder = require('portfinder');
-const querystring = require('querystring');
 const co = require('co');
-const open = require('open');
 const fs = require('fs');
 const ROOT_PATH = process.cwd();
 
@@ -88,30 +85,11 @@ module.exports = function(def) {
       */
       const abc = def.lookupABCJson();
       const builder = abc.assets.builder.name;
-      const autoPort = yield portfinder.getPortPromise();
-      // 默认使用3333端口
-      const port = opts.port === 3333 ? autoPort : opts.port;
-      let devServer = get(SAAS_CONFIG, 'webpack.devServer', {});
-      let refletParams = Object.assign({
-        builderReflect: `${builder}/reflect.js`,
-        host: 'local.koubei.test',
-        path: '',
-        query: {},
-        port,
-        livereload: false,
-      }, devServer);
-      const query = querystring.stringify(refletParams.query);
-      let openUrl = `http://${refletParams.host}:${refletParams.port}/index.html`;
-      if (refletParams.path) {
-        openUrl += `#/${refletParams.path}`
-      }
-      if (query) {
-        openUrl += `?${query}`;
-      }
-      yield def.kit.reflect.start(refletParams);
-      def.log.info(chalk.yellow('打开入口页面进行调试:'));
-      open(openUrl);
-      def.log.info(chalk.yellow(openUrl));
+
+      yield def.kit.reflect.start({
+        customServer: true,
+        builderReflect: `${builder}/server.js`,
+      });
     }
   };
 
