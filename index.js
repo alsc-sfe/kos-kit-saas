@@ -32,9 +32,13 @@ const ask = (def) => def.ui.list('确定执行线上发布, 执行后不可撤�
 const checkChildApp = function* () {
   const name = get(PKG, 'name', '');
   const microAppName = get(SAAS_CONFIG, 'microAppName', '');
-  if (!microAppName) throw '缺少microAppName, 请在微应用管理平台获取, 并在app.config.js中配置';
+  if (!microAppName) {
+    throw '缺少microAppName配置, 请在微应用管理平台(https://kbmicro.alibaba-inc.com)获取，并在app.config.ts中进行配置';
+  }
   const res = yield fetchCheckChildApp({ name, appRoute: microAppName });
-  if (!res.data) throw '微应用未被注册';
+  if (!res.data) {
+    throw 'microAppName未注册, 请在微应用管理平台(https://kbmicro.alibaba-inc.com)注册';
+  };
 }
 
 module.exports = function(def) {
@@ -151,8 +155,8 @@ module.exports = function(def) {
             }
             yield co(publish.bind(this, opts));
           } catch (err) {
-            console.log('err:');
-            console.error(err);
+            console.log('error:');
+            console.log(chalk.red(err));
           }
         }
       }
