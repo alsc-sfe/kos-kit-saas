@@ -45,6 +45,9 @@ module.exports = function(def) {
 
   const Kit = {};
 
+  const abc = def.lookupABCJson();
+  const builderName = abc.assets.builder.name;
+
   // def init cake [--options]
   Kit.init = {
     'action': function* (opts) {
@@ -105,9 +108,13 @@ module.exports = function(def) {
       const abc = def.lookupABCJson();
       const { builder } = abc;
 
-      yield def.kit.build.run({
-        'builder': builder,
-      });
+      if(builderName.includes('mini-program')){
+        require('./mini-program/build')(def);
+      } else {
+        yield def.kit.build.run({
+          'builder': builder,
+        });
+      }
     }
   };
 
@@ -161,6 +168,16 @@ module.exports = function(def) {
         }
       }
     };
+  }
+
+  // def publish mini-program
+  if(builderName.includes('mini-program')){
+    Kit.publish = {
+      'description': '对命令描述',
+      'action': function* (type, opts) {
+        require('./mini-program/publish')(def);
+      }
+    }
   }
 
   return Kit;
