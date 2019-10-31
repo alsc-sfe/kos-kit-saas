@@ -173,9 +173,20 @@ module.exports = function(def) {
   // def publish mini-program
   if(builderName.includes('mini-program')){
     Kit.publish = {
-      'description': '对命令描述',
+      'description': '小程序发布',
       'action': function* (type, opts) {
         require('./mini-program/publish')(def);
+      }
+    }
+  }
+
+  // def install mini-program ？
+  if(builderName.includes('mini-program')){
+    console.log('install');
+    Kit.install = {
+      'description': '对命令描述',
+      'action': function* (type, opts) {
+        console.log('install');
       }
     }
   }

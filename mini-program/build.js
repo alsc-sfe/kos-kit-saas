@@ -21,7 +21,6 @@ module.exports = async (def) => {
 
     const abc = def.lookupABCJson();
     const builderName = abc.assets.builder.name;
-    // require(`./${buildType}`)(def);
     process.env.buildType = buildType;
     process.env.defPubType = 'prod';
 

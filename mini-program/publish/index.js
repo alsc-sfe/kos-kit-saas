@@ -4,19 +4,27 @@ module.exports = async (def) => {
   try {
     const publishType = await def.ui.list('请选择发布类型：', [
       {
-        'name': '组件',
-        'value': 'component',
+        'name': '组件 beta发布',
+        'value': 'tnpm-beta',
       }, {
-        'name': '微信',
-        'value': 'wx',
+        'name': '组件 正式发布',
+        'value': 'tnpm-prod',
       },
       {
         'name': '支付宝',
         'value': 'alipay',
       },
       {
-        'name': 'H5',
-        'value': 'h5',
+        'name': '微信',
+        'value': 'wx',
+      },
+      {
+        'name': 'H5 日常发布',
+        'value': 'h5-daily',
+      },
+      {
+        'name': 'H5 生产发布',
+        'value': 'h5-prod',
       }], false);
     require(`./${publishType}`)(def);
   } catch (err) {
