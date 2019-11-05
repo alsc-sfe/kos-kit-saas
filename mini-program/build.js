@@ -13,10 +13,6 @@ module.exports = async (def) => {
     {
       'name': 'H5',
       'value': 'h5',
-    },
-    {
-      'name': 'ALL 全部',
-      'value': 'all',
     }], false);
 
     const abc = def.lookupABCJson();
