@@ -3,10 +3,10 @@
 const assert = require('assert');
 
 const path = require('path');
-const Def = require('@ali/def-core');
+const Def = require('@saasfe/kos-core');
 
 const def = new Def({
-  'home': path.resolve('../.def'),
+  'home': path.resolve('../.kos'),
   'silent': true,
   'disableCheckUpdate': true,
   'store': {
