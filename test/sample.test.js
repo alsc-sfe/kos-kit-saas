@@ -3,7 +3,7 @@
 const assert = require('assert');
 
 const path = require('path');
-const Def = require('@saasfe/kos-core');
+const Def = require('@alsc-sfe/kos-core');
 
 const def = new Def({
   'home': path.resolve('../.kos'),
